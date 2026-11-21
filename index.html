@@ -7,21 +7,30 @@
   <link rel="stylesheet" href="/static/app.css">
 </head>
 <body>
-  <header>
-    <h1>회계·정산 대사 SQL</h1>
-    <div id="status" class="status">서버 확인 중…</div>
+  <header class="top">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">Σ</span>
+      <h1>회계·정산 대사 SQL</h1>
+      <span id="status" class="status">서버 확인 중…</span>
+    </div>
+    <nav id="tabs" role="tablist">
+      <button role="tab" data-tab="saved" class="active">준비된 질문</button>
+      <button role="tab" data-tab="ask">묻기</button>
+      <button role="tab" data-tab="tables">테이블</button>
+      <button role="tab" data-tab="files">내 파일</button>
+    </nav>
+    <div class="tools">
+      <label class="search"><span aria-hidden="true">⌕</span>
+        <input id="search" type="search" placeholder="질문 또는 지표 검색…" autocomplete="off" aria-label="준비된 질문 검색">
+      </label>
+      <button id="btn-refresh" class="icon" type="button" title="준비된 질문을 모두 다시 계산" aria-label="준비된 질문을 모두 다시 계산">⟳</button>
+    </div>
   </header>
-
-  <nav id="tabs" role="tablist">
-    <button role="tab" data-tab="saved" class="active">준비된 질문</button>
-    <button role="tab" data-tab="ask">묻기</button>
-    <button role="tab" data-tab="tables">테이블</button>
-    <button role="tab" data-tab="files">내 파일</button>
-  </nav>
 
   <main>
     <section id="tab-saved" class="panel active">
-      <p class="muted">단추를 누르면 지금 올라와 있는 데이터로 SQL을 다시 실행합니다.</p>
+      <div class="banner"><span class="i" aria-hidden="true">i</span>
+        <span>단추를 누르면 지금 올라와 있는 데이터로 <b>SQL을 다시 실행</b>합니다.</span></div>
       <div id="saved-presets"></div>
       <h3>내가 저장한 질문 <span class="muted">(이 브라우저에 저장됨)</span></h3>
       <div class="row"><button id="btn-download" class="ghost">저장한 질문 JSON 내려받기</button><span id="saved-note" class="muted"></span></div>
@@ -81,6 +90,11 @@
       <div id="upload-results"></div>
     </section>
   </main>
+
+  <footer class="foot">
+    <span>회계·정산 대사 SQL · DuckDB-WASM 1.29.0 — 데이터는 이 브라우저 안에서만 읽습니다</span>
+    <span>마지막 계산: <b id="last-calc">아직 없음</b> · 읽기 전용 SQL(SELECT · WITH)만 실행</span>
+  </footer>
 
   <script type="module" src="/static/app.js"></script>
 </body>

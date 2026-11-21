@@ -1,4 +1,4 @@
-import "./saved.js";
+import { recalcAll, filterCards } from "./saved.js";
 import "./tables.js";
 import "./upload.js";
 import "./ask.js";
@@ -15,6 +15,13 @@ function showTab(name) {
 tabs.forEach(b => b.addEventListener("click", () => showTab(b.dataset.tab)));
 const first = location.hash.slice(1);
 if ([...tabs].some(b => b.dataset.tab === first)) showTab(first);
+
+// 위쪽 도구: 검색(준비된 질문 카드 거르기) · 새로고침(모두 다시 계산)
+document.getElementById("search").addEventListener("input", e => { showTab("saved"); filterCards(e.target.value); });
+document.getElementById("btn-refresh").addEventListener("click", async e => {
+  const b = e.currentTarget; b.disabled = true; showTab("saved");
+  try { await recalcAll(); } finally { b.disabled = false; }
+});
 
 // 서버 상태: 연결 여부와 AI 키 설정 여부만 표시한다(키 값은 오지 않는다).
 export const serverState = { connected: false, keySet: false };
