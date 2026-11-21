@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>매출 대사 SQL</title>
+  <link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+  <header>
+    <h1>매출 대사 SQL</h1>
+    <div id="status" class="status">서버 확인 중…</div>
+  </header>
+
+  <nav id="tabs" role="tablist">
+    <button role="tab" data-tab="saved" class="active">준비된 질문</button>
+    <button role="tab" data-tab="ask">묻기</button>
+    <button role="tab" data-tab="tables">테이블</button>
+    <button role="tab" data-tab="files">내 파일</button>
+  </nav>
+
+  <main>
+    <section id="tab-saved" class="panel active">
+      <p class="muted">단추를 누르면 지금 올라와 있는 데이터로 SQL을 다시 실행합니다.</p>
+      <div id="saved-presets"></div>
+      <h3>내가 저장한 질문 <span class="muted">(이 브라우저에 저장됨)</span></h3>
+      <div class="row"><button id="btn-download" class="ghost">저장한 질문 JSON 내려받기</button><span id="saved-note" class="muted"></span></div>
+      <div id="saved-mine"></div>
+    </section>
+    <section id="tab-ask" class="panel">
+      <label for="q">질문 (한국어)</label>
+      <textarea id="q" rows="2" maxlength="500" placeholder="예) 2025년 12월 주문 기준 매출과 출고 기준 매출 알려줘"></textarea>
+      <div class="row"><button id="btn-ask">SQL 만들기</button><span id="ask-msg" class="muted"></span></div>
+
+      <div id="ask-result" hidden>
+        <h3>AI가 쓴 SQL</h3>
+        <pre id="ask-sql"></pre>
+        <div id="ask-guard" class="verdict"></div>
+
+        <h3>결과</h3>
+        <div id="ask-table" class="tablewrap"></div>
+
+        <h3>① 산출 근거 <span id="basis-badge" class="badge"></span></h3>
+        <div id="ask-basis"></div>
+
+        <div class="row save-row">
+          <input id="save-name" type="text" maxlength="60" placeholder="저장할 이름">
+          <button id="btn-save">이 SQL 저장</button><span id="save-msg" class="muted"></span>
+        </div>
+
+        <h3>② 원인 한 단계 <span id="cause-badge" class="badge"></span></h3>
+        <div id="ask-cause"><p class="muted">원인을 쪼개는 중…</p></div>
+      </div>
+
+      <details id="ask-sent">
+        <summary>AI에 보낸 내용</summary>
+        <pre id="ask-sent-body"></pre>
+      </details>
+
+      <h3>SQL 직접 쓰기 (같은 검사를 거칩니다)</h3>
+      <textarea id="mysql" rows="3" placeholder="SELECT ..."></textarea>
+      <div class="row"><button id="btn-check">검사</button></div>
+      <div id="my-guard" class="verdict"></div>
+    </section>
+    <section id="tab-tables" class="panel">
+      <p class="muted">지금 이 브라우저에 올라와 있는 테이블입니다. 내 파일 탭에서 올린 테이블도 여기에 더해집니다.</p>
+      <div id="tables-list"></div>
+    </section>
+    <section id="tab-files" class="panel">
+      <div id="dropzone" class="dropzone" tabindex="0">
+        <strong>CSV · 엑셀(xlsx) 파일을 여기에 끌어다 놓거나 눌러서 고르세요</strong>
+        <div class="muted">파일 이름(확장자 뺀 것)이 테이블 이름이 됩니다. 같은 이름이면 기존 테이블을 새 파일로 바꿉니다.<br>
+          CSV는 UTF-8(앞의 BOM은 무시), 엑셀은 첫 시트의 첫 행이 컬럼 이름입니다. 컬럼 이름의 공백은 밑줄로 바꿉니다.<br>
+          파일은 이 브라우저 안에서만 읽고 밖으로 보내지 않습니다. 새로고침하면 올린 파일은 사라집니다.</div>
+        <input id="file-input" type="file" accept=".csv,.xlsx" multiple hidden>
+      </div>
+      <div id="upload-results"></div>
+    </section>
+  </main>
+
+  <script type="module" src="/static/app.js"></script>
+</body>
+</html>

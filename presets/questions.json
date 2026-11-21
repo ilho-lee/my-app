@@ -1,0 +1,26 @@
+[
+  {
+    "id": "monthly-order-vs-ship-sales",
+    "name": "월별 주문 매출 vs 출고 매출",
+    "question": "월별 주문 기준 매출과 출고 기준 매출을 나란히 보여줘. 출고 기준 매출은 출고 수량 × 주문 단가를 출고일의 월로 묶어서 구해줘",
+    "metrics": ["주문 매출", "출고 매출"],
+    "note": "주문 매출은 주문일 기준, 출고 매출은 출고일 기준이라 월이 어긋납니다. 월말 주문은 다음 달에 출고되므로 차이가 생기는 것이 정상입니다.",
+    "sql": "WITH o AS (\n  SELECT strftime(order_date, '%Y-%m') AS ym, SUM(sales_amount) AS order_sales\n  FROM mall_orders\n  GROUP BY 1\n), s AS (\n  SELECT strftime(sh.ship_date, '%Y-%m') AS ym, SUM(sh.ship_qty * mo.unit_price) AS ship_sales\n  FROM shipments sh\n  JOIN mall_orders mo ON sh.order_no = mo.order_no AND sh.line_no = mo.line_no\n  GROUP BY 1\n)\nSELECT COALESCE(o.ym, s.ym) AS \"월\",\n       o.order_sales AS \"주문 매출\",\n       s.ship_sales AS \"출고 매출\",\n       COALESCE(o.order_sales, 0) - COALESCE(s.ship_sales, 0) AS \"차이(주문-출고)\"\nFROM o FULL OUTER JOIN s ON o.ym = s.ym\nORDER BY 1"
+  },
+  {
+    "id": "mall-monthly-unshipped-ratio",
+    "name": "쇼핑몰별 월별 미출고 수량 비율",
+    "question": "쇼핑몰별로 주문 수량 대비 출고되지 않은 수량의 비율을 월별로 보여줘",
+    "metrics": ["미출고 수량"],
+    "note": "월은 주문일 기준입니다. 출고 행이 없는 주문 항목은 출고 수량 0으로 셉니다. 2025-12 말 주문은 연말 프로모션으로 출고가 늦어 이 데이터 기간 안에 출고되지 않았을 수 있어 12월 비율이 높게 보일 수 있습니다.",
+    "sql": "SELECT strftime(o.order_date, '%Y-%m') AS \"월\",\n       o.mall AS \"쇼핑몰\",\n       SUM(o.qty) AS \"주문 수량\",\n       SUM(o.qty - COALESCE(s.ship_qty, 0)) AS \"미출고 수량\",\n       ROUND(SUM(o.qty - COALESCE(s.ship_qty, 0)) * 1.0 / SUM(o.qty), 4) AS \"미출고 비율\"\nFROM mall_orders o\nLEFT JOIN (\n  SELECT order_no, line_no, SUM(ship_qty) AS ship_qty\n  FROM shipments\n  GROUP BY order_no, line_no\n) s ON o.order_no = s.order_no AND o.line_no = s.line_no\nGROUP BY 1, 2\nORDER BY 1, 2"
+  },
+  {
+    "id": "set-margin",
+    "name": "세트 상품별 마진(정가 − 환산 원가)",
+    "question": "세트 상품별로 정가에서 구성 단품의 원가를 수량대로 합친 환산 원가를 뺀 마진을 보여줘",
+    "metrics": ["세트 환산 원가", "마진"],
+    "note": "세트의 unit_cost는 비어 있어, set_components의 구성 단품 unit_cost × qty 합으로 환산합니다. 쇼핑몰 수수료는 포함하지 않습니다.",
+    "sql": "SELECT p.sku AS \"세트 코드\",\n       p.product_name AS \"세트 상품\",\n       p.list_price AS \"정가\",\n       SUM(c.qty * u.unit_cost) AS \"환산 원가\",\n       p.list_price - SUM(c.qty * u.unit_cost) AS \"마진\"\nFROM products p\nJOIN set_components c ON c.set_sku = p.sku\nJOIN products u ON u.sku = c.component_sku\nWHERE p.is_set = 1\nGROUP BY p.sku, p.product_name, p.list_price\nORDER BY p.sku"
+  }
+]

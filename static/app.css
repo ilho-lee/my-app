@@ -1,0 +1,65 @@
+:root { --fg:#1d2330; --muted:#6b7385; --line:#dde1ea; --bg:#f6f7fa; --accent:#2b5fd9; --ok:#1b7f4b; --bad:#c0392b; }
+* { box-sizing: border-box; }
+body { margin:0; font:15px/1.5 "Malgun Gothic","Apple SD Gothic Neo",sans-serif; color:var(--fg); background:var(--bg); }
+header { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:12px 24px; background:#fff; border-bottom:1px solid var(--line); }
+h1 { margin:0; font-size:18px; }
+.status { font-size:13px; color:var(--muted); }
+.status.ok { color:var(--ok); }
+.status.warn { color:var(--bad); }
+nav { display:flex; gap:4px; padding:0 24px; background:#fff; border-bottom:1px solid var(--line); }
+nav button { border:0; background:none; padding:12px 16px; font:inherit; color:var(--muted); cursor:pointer; border-bottom:3px solid transparent; }
+nav button.active { color:var(--accent); border-bottom-color:var(--accent); font-weight:bold; }
+main { padding:24px; max-width:1100px; margin:0 auto; }
+.panel { display:none; }
+.panel.active { display:block; }
+.muted { color:var(--muted); }
+label { font-weight:bold; display:block; margin-bottom:4px; }
+textarea { width:100%; font:inherit; padding:8px 10px; border:1px solid var(--line); border-radius:6px; resize:vertical; }
+button { font:inherit; padding:7px 16px; border:1px solid var(--accent); background:var(--accent); color:#fff; border-radius:6px; cursor:pointer; }
+button:disabled { opacity:.5; cursor:default; }
+.row { display:flex; align-items:center; gap:12px; margin:8px 0 16px; }
+h3 { font-size:15px; margin:20px 0 6px; }
+pre { background:#fff; border:1px solid var(--line); border-radius:6px; padding:10px 12px; overflow:auto; white-space:pre-wrap; font:13px/1.5 Consolas,monospace; }
+.verdict { font-weight:bold; margin:6px 0; }
+.verdict.ok { color:var(--ok); }
+.verdict.bad { color:var(--bad); }
+.meta { display:grid; grid-template-columns:max-content 1fr; gap:4px 14px; margin:8px 0; }
+.meta dt { color:var(--muted); }
+.meta dd { margin:0; }
+details { margin:12px 0; }
+.tablewrap { overflow:auto; max-height:380px; background:#fff; border:1px solid var(--line); border-radius:6px; }
+table.data { border-collapse:collapse; width:100%; font-size:13px; }
+table.data th, table.data td { padding:5px 10px; border-bottom:1px solid var(--line); text-align:left; white-space:nowrap; }
+table.data th { position:sticky; top:0; background:#eef1f7; }
+table.data td.num { text-align:right; font-variant-numeric:tabular-nums; }
+.badge { font-size:12px; font-weight:bold; padding:2px 8px; border-radius:10px; margin-left:6px; vertical-align:middle; }
+.badge.ok { background:#e3f4ea; color:var(--ok); }
+.badge.warn { background:#fdeaea; color:var(--bad); }
+.basis { margin:0; padding:0; list-style:none; }
+.basis li { padding:6px 0; border-bottom:1px dashed var(--line); }
+.basis .k { display:inline-block; min-width:90px; color:var(--muted); }
+.basis .warn { color:var(--bad); font-weight:bold; }
+.basis .def { color:var(--muted); font-size:13px; margin-left:94px; }
+.chunk { font-weight:bold; background:#fff8e1; border:1px solid #f0d98a; border-radius:6px; padding:8px 12px; margin:8px 0; }
+
+input[type=text] { font:inherit; padding:7px 10px; border:1px solid var(--line); border-radius:6px; min-width:260px; }
+button.ghost { background:#fff; color:var(--accent); }
+button.small { padding:3px 10px; font-size:13px; }
+.card { background:#fff; border:1px solid var(--line); border-radius:8px; padding:14px 16px; margin:0 0 16px; }
+.card h4 { margin:0 0 4px; font-size:15px; }
+.card .q { color:var(--muted); margin:0 0 8px; }
+.card .defs { font-size:13px; color:var(--muted); margin:6px 0; }
+.card .defs b { color:var(--fg); }
+.card .stat { margin:8px 0; font-size:13px; }
+.card .stat span + span::before { content:" · "; color:var(--line); }
+.card .note { font-size:13px; color:#8a6d00; margin:6px 0; }
+
+.dropzone { border:2px dashed var(--line); background:#fff; border-radius:10px; padding:28px 20px; text-align:center; cursor:pointer; margin-bottom:16px; }
+.dropzone.over, .dropzone:hover { border-color:var(--accent); background:#f1f5ff; }
+.dropzone .muted { font-size:13px; margin-top:8px; line-height:1.7; }
+.cmp { font-weight:bold; padding:8px 12px; border-radius:6px; margin:8px 0; }
+.cmp.ok { background:#e3f4ea; color:var(--ok); }
+.cmp.bad { background:#fdeaea; color:var(--bad); }
+.card.stale { border-color:#f0d98a; }
+.stale-note { font-size:13px; font-weight:bold; color:#8a6d00; background:#fff8e1; border-radius:6px; padding:6px 10px; margin:8px 0; }
+.warn { color:var(--bad); font-weight:bold; }
