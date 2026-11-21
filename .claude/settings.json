@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(./tools/answer)",
+      "Read(./tools/answer/**)"
+    ]
+  }
+}
