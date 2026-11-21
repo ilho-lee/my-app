@@ -59,8 +59,12 @@
 
       <h3>SQL 직접 쓰기 (같은 검사를 거칩니다)</h3>
       <textarea id="mysql" rows="3" placeholder="SELECT ..."></textarea>
-      <div class="row"><button id="btn-check">검사</button></div>
+      <div class="row"><button id="btn-check">검사</button> <button id="btn-run">SQL 직접쓰기 실행</button></div>
       <div id="my-guard" class="verdict"></div>
+      <div id="my-result" hidden>
+        <p id="my-stat" class="muted"></p>
+        <div id="my-table" class="tablewrap"></div>
+      </div>
     </section>
     <section id="tab-tables" class="panel">
       <p class="muted">지금 이 브라우저에 올라와 있는 테이블입니다. 내 파일 탭에서 올린 테이블도 여기에 더해집니다.</p>

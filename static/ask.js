@@ -153,7 +153,34 @@ $("btn-save").addEventListener("click", async () => {
     msg.textContent = "저장했습니다. 「준비된 질문」 탭에서 볼 수 있습니다.";
   } catch (e) { msg.textContent = "저장하지 못했습니다: " + e.message; }
 });
-$("btn-check").addEventListener("click", () => showVerdict($("my-guard"), checkSql($("mysql").value)));
+$("btn-check").addEventListener("click", () => { $("my-result").hidden = true; showVerdict($("my-guard"), checkSql($("mysql").value)); });
+
+// 직접 쓴 SQL 실행: 같은 검사(guard + DuckDB 구문 확인)를 통과해야 돈다.
+$("btn-run").addEventListener("click", async () => {
+  const sql = $("mysql").value;
+  const v = checkSql(sql);
+  showVerdict($("my-guard"), v);
+  const box = $("my-result");
+  box.hidden = true;
+  if (!v.ok) return;
+  const btn = $("btn-run");
+  btn.disabled = true;
+  try {
+    await openDb();
+    const t0 = performance.now();
+    const res = await runReadOnly(sql);
+    const sec = ((performance.now() - t0) / 1000).toFixed(2);
+    const shown = Math.min(res.rows.length, SHOW_ROWS);
+    $("my-stat").textContent = `${res.rows.length.toLocaleString()}행 · ${sec}초` + (res.rows.length > shown ? ` (앞 ${shown}행만 표시)` : "");
+    renderTable($("my-table"), res, SHOW_ROWS);
+    box.hidden = false;
+  } catch (e) {
+    $("my-guard").textContent = "✘ 실행하지 못했습니다: " + e.message;
+    $("my-guard").className = "verdict bad";
+  } finally {
+    btn.disabled = false;
+  }
+});
 
 // 주소에 ?q=질문 이 있으면 채워서 바로 실행한다. (같은 질문을 다시 확인할 때 편함)
 const preset = new URLSearchParams(location.search).get("q");
