@@ -1,9 +1,10 @@
 import os
+from http.server import BaseHTTPRequestHandler
 
 try:
-    from _common import make_handler
+    from _common import respond
 except ImportError:  # tools/serve.py 에서 패키지로 불러올 때
-    from api._common import make_handler
+    from api._common import respond
 
 
 def handle(method, body):
@@ -15,4 +16,9 @@ def handle(method, body):
     }
 
 
-handler = make_handler(handle)
+class handler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        respond(self, handle, "GET")
+
+    def do_POST(self):
+        respond(self, handle, "POST")

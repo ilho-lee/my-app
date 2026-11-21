@@ -1,12 +1,13 @@
 """POST /api/cause  {question, schema, sql, columns, rows}  ->  {sql, value_column, label_columns, title}
 원래 결과(최대 50행)를 한 번 더 쪼개는 SQL 하나를 AI에게서 받는다. 실행은 브라우저가 한다."""
 import json
+from http.server import BaseHTTPRequestHandler
 
 try:
-    from _common import make_handler
+    from _common import respond
     from _gemini import GeminiError, call_json
 except ImportError:
-    from api._common import make_handler
+    from api._common import respond
     from api._gemini import GeminiError, call_json
 
 MAX_ROWS = 50
@@ -69,4 +70,9 @@ def handle(method, body):
     }
 
 
-handler = make_handler(handle)
+class handler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        respond(self, handle, "GET")
+
+    def do_POST(self):
+        respond(self, handle, "POST")

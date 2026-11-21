@@ -1,12 +1,13 @@
 """POST /api/sql  {question, schema}  ->  {sql, tables, conditions, metrics}
 AI에는 질문과 테이블 설명(schema.json)만 보낸다. 데이터 행은 받지도 보내지도 않는다."""
 import json
+from http.server import BaseHTTPRequestHandler
 
 try:
-    from _common import make_handler
+    from _common import respond
     from _gemini import GeminiError, call_json
 except ImportError:  # tools/serve.py 에서 패키지로 불러올 때
-    from api._common import make_handler
+    from api._common import respond
     from api._gemini import GeminiError, call_json
 
 MAX_Q = 500
@@ -73,4 +74,9 @@ def handle(method, body):
     }
 
 
-handler = make_handler(handle)
+class handler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        respond(self, handle, "GET")
+
+    def do_POST(self):
+        respond(self, handle, "POST")
